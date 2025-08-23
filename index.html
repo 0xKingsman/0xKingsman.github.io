@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kingsman NFT Collections</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+            .floating-shape:nth-child(1) {
+                width: 80px;
+                height: 80px;
+                top: 20%;
+                left: 10%;
+                animation-delay: 0s;
+            }
+
+            .floating-shape:nth-child(2) {
+                width: 120px;
+                height: 120px;
+                top: 60%;
+                left: 80%;
+                animation-delay: 2s;
+            }
+
+            .floating-shape:nth-child(3) {
+                width: 60px;
+                height: 60px;
+                top: 80%;
+                left: 20%;
+                animation-delay: 4s;
+            }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+            .header h1 {
+                font-size: 3.5rem;
+                font-weight: 800;
+                background: linear-gradient(45deg, #fff, #f0f0f0, #fff);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 0.5rem;
+                text-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+            }
+
+            .header p {
+                font-size: 1.2rem;
+                opacity: 0.9;
+                font-weight: 300;
+            }
+
+        .time-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .time-filter {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+        }
+
+            .time-filter:hover {
+                background: rgba(255, 255, 255, 0.25);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+            }
+
+            .time-filter.active {
+                background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+                border-color: rgba(255, 255, 255, 0.3);
+                box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+                transition: left 0.5s;
+            }
+
+            .stat-card:hover::before {
+                left: 100%;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(255, 255, 255, 0.1);
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+
+        .stat-title {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .stat-change {
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+            .stat-change.positive {
+                background: linear-gradient(45deg, #00d4aa, #00b894);
+                color: white;
+            }
+
+            .stat-change.negative {
+                background: linear-gradient(45deg, #ff6b6b, #e55656);
+                color: white;
+            }
+
+            .stat-change.neutral {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .collection-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .collection-card::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .collection-card:hover {
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 0 20px 40px rgba(255, 255, 255, 0.15);
+                border-color: rgba(255, 255, 255, 0.4);
+            }
+
+                .collection-card:hover::after {
+                    opacity: 1;
+                }
+
+        .collection-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .collection-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            overflow: hidden;
+            position: relative;
+        }
+
+            .collection-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 12px;
+            }
+
+        .collection-icon-fallback {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .collection-info {
+            flex: 1;
+        }
+
+            .collection-info h3 {
+                font-size: 1.3rem;
+                font-weight: 600;
+                margin-bottom: 0.2rem;
+            }
+
+            .collection-info p {
+                opacity: 0.8;
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+        .collection-links {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .collection-link {
+            padding: 0.3rem 0.6rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+            .collection-link:hover {
+                background: rgba(255, 255, 255, 0.3);
+                border-color: rgba(255, 255, 255, 0.5);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+            }
+
+            .collection-link.mint-link {
+                background: linear-gradient(45deg, #00d4aa, #00b894);
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+
+            .collection-link.opensea-link {
+                background: linear-gradient(45deg, #2081e2, #1e6bb8);
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+
+        .collection-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .collection-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .collection-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .collection-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4aa, #4ecdc4);
+            border-radius: 10px;
+            transition: width 0.8s ease;
+            position: relative;
+        }
+
+            .progress-fill::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                animation: shimmer 2s infinite;
+            }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .collection-change {
+            text-align: center;
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            z-index: 1000;
+        }
+
+            .refresh-btn:hover {
+                transform: scale(1.1) rotate(180deg);
+                box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
+            }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .collections-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .time-filters {
+                gap: 0.5rem;
+            }
+
+            .time-filter {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .collection-links {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation">
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Kingsman NFT Minting Tracker</h1>
+            <p>Real-time monitoring of Kingsman NFT collections on Polygon</p>
+        </div>
+
+        <div class="time-filters">
+            <div class="time-filter active" data-period="24h">24 Hours</div>
+            <div class="time-filter" data-period="48h">48 Hours</div>
+            <div class="time-filter" data-period="7d">7 Days</div>
+            <div class="time-filter" data-period="30d">30 Days</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-title">Total Collections</div>
+                <div class="stat-value" id="totalCollections">0</div>
+                <div class="stat-change neutral">Active</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Total Minted</div>
+                <div class="stat-value" id="totalMinted">0</div>
+                <div class="stat-change positive" id="totalMintedChange">+0 (24h)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Fastest Growing</div>
+                <div class="stat-value" id="fastestCollection">-</div>
+                <div class="stat-change positive" id="fastestGrowingChange">Loading...</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Average Growth</div>
+                <div class="stat-value" id="averageGrowth">0</div>
+                <div class="stat-change positive">per collection</div>
+            </div>
+        </div>
+
+        <div class="collections-grid" id="collectionsGrid">
+            <!-- Collections will be populated here -->
+        </div>
+
+        <button class="refresh-btn" id="refreshBtn" title="Refresh Data">
+            ↻
+        </button>
+    </div>
+
+    <script>
+        // =============================================================================
+        // 🔑 API CONFIGURATION - ADD YOUR FREE API KEYS HERE
+        // =============================================================================
+
+        const API_CONFIG = {
+        // Your Alchemy API configuration
+        ALCHEMY_API_KEY: 'EPtIPHglhfvc7ON6nUtC_',
+        ALCHEMY_URL: 'https://polygon-mainnet.g.alchemy.com/v2/EPtIPHglhfvc7ON6nUtC_',
+
+        // Option 2: Moralis (40K requests/month free)
+        // Get your free API key from: https://moralis.io
+        MORALIS_API_KEY: 'YOUR_MORALIS_API_KEY_HERE',
+
+        // Option 3: Free Polygon RPC (No API key needed)
+        POLYGON_RPC: 'https://polygon-rpc.com/',
+
+        // Which API to use: 'alchemy', 'moralis', or 'polygon-rpc'
+        PREFERRED_API: 'alchemy' // Using your Alchemy API
+        };
+
+        // =============================================================================
+        // 📝 YOUR NFT COLLECTIONS - ADD YOUR COLLECTIONS HERE
+        // =============================================================================
+
+        const myCollections = [
+        {
+        name: "GeJods",
+        symbol: "GEJODS",
+        contractAddress: "0x5806e09540E10057f2f10bDb84aCFd7457D02324",
+        totalSupply: 10000,
+        description: "GeJods is a collection of 10,000 obliterating Jods living on the Polygon blockchain.",
+        // Add your links here (optional - leave empty string if you don't have them)
+        mintLink: "https://gejods.netlify.app/", // Replace with actual mint link
+        openseaLink: "https://opensea.io/collection/gejod", // Replace with actual OpenSea link
+        // Add profile picture filename (optional - place image in same directory as HTML)
+        profilePicture: "gejods.png" // 60x60px recommended, supports jpg, png, gif, webp
+        },
+        {
+        name: "Badges",
+        symbol: "BADGES",
+        contractAddress: "0xe7F4Bf2210e1eB3Fb24F8AD401b400792f746a47",
+        totalSupply: 10000,
+        description: "Badges is raw individuality — 10,000 NFTs, No repeats.",
+        mintLink: "https://badges-nft.netlify.app/",
+        openseaLink: "https://opensea.io/collection/badges-og",
+        profilePicture: "badges.gif"
+        },
+        {
+        name: "Shibuya Shufflers",
+        symbol: "SHIBUYA",
+        contractAddress: "0xafC18BDF89641eBB1804Ab0Ac7543585332E34fB",
+        totalSupply: 5000,
+        description: "Shibuya Shufflers is a collection of 5,000 unique 3D animated Shufflers living on the polygon blockchain. Inspired by Tokyo's eclectic street fashion, each Shuffler has its own style & personality. Join our community for non-stop shuffling and endless possibilities.",
+        mintLink: "https://shibuya-shufflers.netlify.app/",
+        openseaLink: "https://opensea.io/collection/shibuya-shufflers",
+        profilePicture: "shibuya.gif"
+        },
+        {
+        name: "Mutant Jr. Yacht Club",
+        symbol: "MJRYC",
+        contractAddress: "0x1DbA57ff49d7A1Fe60C4Fa408620669500c29f57",
+        totalSupply: 5555,
+        description: "Mutant Jr. Yacht Club is a collection of 5555 unique NFTs featuring youthful mutant apes on their journey to becoming full-fledged members of the Yacht Club. These adorable apes come in a variety of colors and with unique attributes, ready to be minted and collected by those who appreciate their charm and potential for greatness.",
+        mintLink: "https://www.launchmynft.io/collections/0x50287E194B3b1A1966560C48501E46C6D3755Fb9/VZxuqpFDF9jpfSNCc4PY",
+        openseaLink: "https://opensea.io/collection/mutant-jr-yacht-club",
+        profilePicture: "mutanz.gif"
+        },
+        {
+        name: "Doodles Jr. Yacht Club",
+        symbol: "DJRYC",
+        contractAddress: "0x3FfF6e30B83F2b5d52F2Ad5B99e5F2c32e8b932F",
+        totalSupply: 10000,
+        description: "Doodles Jr. Yacht Club is a collection of 10,000 unique NFTs featuring youthful doodle apes on their journey to becoming full-fledged members of the Yacht Club.",
+        mintLink: "https://www.launchmynft.io/collections/0x50287E194B3b1A1966560C48501E46C6D3755Fb9/VZxuqpFDF9jpfSNCc4PY",
+        openseaLink: "https://opensea.io/collection/doodles-jr-yacht-club",
+        profilePicture: "doodlejr.png"
+        },
+        {
+        name: "Dobbies Megaverse",
+        symbol: "DM",
+        contractAddress: "0x9c70D131F21B4Ed46Da3A6270302Eb4BfD2ffDcb",
+        totalSupply: 1500,
+        description: "The Dobbies Megaverse is a collection of 1,500 unique hand-drawn 3D animated Dobbies living on the polygon blockchain. Join the Dobbies Megaverse!",
+        mintLink: "https://www.launchmynft.io/collections/0xe78E27e6F4f87193c82f4500749B4320E2afBF25/OUrnnUstts2LWHqpxqaE",
+        openseaLink: "https://opensea.io/collection/dobbies-megaverse",
+        profilePicture: "dobbies.png"
+        },
+        {
+        name: "Evil Bears",
+        symbol: "EBEAR",
+        contractAddress: "0xCC0C6317245341b64806A87eC5f7B2f20eCc4e81",
+        totalSupply: 7500,
+        description: "Evil Bears is a generative art project of 7,500 unique diverse bears living on the polygon blockchain. Aiming to build a virtuous community that will transcend the internet into the real world.",
+        mintLink: "https://www.launchmynft.io/collections/0x50287E194B3b1A1966560C48501E46C6D3755Fb9/VZxuqpFDF9jpfSNCc4PY",
+        openseaLink: "https://opensea.io/collection/evil-bears-og",
+        profilePicture: "evilbears.gif"
+        },
+        {
+        name: "Elon Musk Digital Trading Cards",
+        symbol: "BADGES",
+        contractAddress: "0x08DBFf8f481692A04039457fA242f0A174629b76",
+        totalSupply: 10000,
+        description: "The Elon Musk Digital Trading Cards is an inspiring collection of 10,000 unique hand-drawn NFT Digital Trading Cards. Are you ready to make history? For the first time, collect your own O̶f̶f̶i̶c̶i̶a̶l̶ Elon Musk Digital Trading Cards.",
+        mintLink: "https://www.launchmynft.io/collections/0xD48E72516E5645203c240355B4f7Be92b06f5BD9/JBKoBPNo3Wgt98BWvirP",
+        openseaLink: "https://opensea.io/collection/elon-musk-digital-trading-cards-og",
+        profilePicture: "elon.jpg"
+        },
+        {
+        name: "Doodleplex",
+        symbol: "DOPLEX",
+        contractAddress: "0x8B437269A96DbaD08896112417d1a252aC28EB0f",
+        totalSupply: 5000,
+        description: "A community-driven collectibles project on polygon featuring a NFT collection containing 5000 colorful Doodleplexs in a joyful range of colors, traits and sizes.",
+        mintLink: "https://www.launchmynft.io/collections/0xe3Cda2e08c99818E460fE108150c15b7F4a247A7/FaAnSKwr8OFaIe72eKcL",
+        openseaLink: "https://opensea.io/collection/doodleplexs",
+        profilePicture: "doodleplex.png"
+        },
+        {
+        name: "Shuketsu",
+        symbol: "SHUKETSU",
+        contractAddress: "0x9372036CC7a9B8D95bB0779f1e8874f5a383ba29",
+        totalSupply: 10000,
+        description: "Shuketsu unveils a mesmerizing collection of 10,000 unique animated characters living on the Polygon blockchain.",
+        mintLink: "https://www.launchmynft.io/collections/0x9EEa0D03BcFa82d337Cc4624AD08184294c21698/CTvBUEUDWDcZBymjGenD",
+        openseaLink: "https://opensea.io/collection/shuketsu",
+        profilePicture: "shuketsu.png"
+        },
+        ];
+
+        let currentPeriod = '24h';
+        let collections = [];
+
+        function getChangeForPeriod(collection, period) {
+        switch(period) {
+        case '24h': return collection.change24h || 0;
+        case '48h': return collection.change48h || 0;
+        case '7d': return collection.change7d || 0;
+        case '30d': return collection.change30d || 0;
+        default: return collection.change24h || 0;
+        }
+        }
+
+        function formatChange(change) {
+        if (change > 0) {
+        return `+${change}`;
+        } else if (change < 0) {
+        return `${change}`;
+        }
+        return '0';
+        }
+
+        function getChangeClass(change) {
+        if (change > 0) return 'positive';
+        if (change < 0) return 'negative';
+        return 'neutral';
+        }
+
+        function renderCollection(collection) {
+        const change = getChangeForPeriod(collection, currentPeriod);
+        const progress = collection.totalSupply > 0 ?
+        (collection.currentMinted / collection.totalSupply * 100).toFixed(1) : 0;
+
+        // Profile picture handling
+        let iconHTML = '';
+        if (collection.profilePicture) {
+        iconHTML = `
+        <img src="${collection.profilePicture}"
+        alt="${collection.name}"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="collection-icon-fallback" style="display: none;">${collection.symbol.charAt(0)}</div>
+        `;
+        } else {
+        iconHTML = `<div class="collection-icon-fallback">${collection.symbol.charAt(0)}</div>`;
+        }
+
+        // Links handling
+        let linksHTML = '';
+        if (collection.mintLink || collection.openseaLink) {
+        linksHTML = '<div class="collection-links">';
+        if (collection.mintLink) {
+        linksHTML += `<a href="${collection.mintLink}" target="_blank" class="collection-link mint-link">🚀 Mint</a>`;
+        }
+        if (collection.openseaLink) {
+        linksHTML += `<a href="${collection.openseaLink}" target="_blank" class="collection-link opensea-link">🌊 OpenSea</a>`;
+        }
+        linksHTML += '</div>';
+        }
+
+        return `
+        <div class="collection-card">
+        <div class="collection-header">
+        <div class="collection-icon">${iconHTML}</div>
+        <div class="collection-info">
+        <h3>${collection.name}</h3>
+        <p>${collection.symbol} • ${collection.contractAddress.slice(0, 6)}...${collection.contractAddress.slice(-4)}</p>
+        ${linksHTML}
+        </div>
+        </div>
+
+        <div class="collection-stats">
+        <div class="collection-stat">
+        <div class="collection-stat-label">Current Minted</div>
+        <div class="collection-stat-value">${(collection.currentMinted || 0).toLocaleString()}</div>
+        </div>
+        <div class="collection-stat">
+        <div class="collection-stat-label">Total Supply</div>
+        <div class="collection-stat-value">${collection.totalSupply.toLocaleString()}</div>
+        </div>
+        </div>
+
+        <div class="progress-bar">
+        <div class="progress-fill" style="width: ${progress}%"></div>
+        </div>
+
+        <div class="collection-change ${getChangeClass(change)}">
+        ${formatChange(change)} mints (${currentPeriod})
+        </div>
+        </div>
+        `;
+        }
+
+        function renderCollections() {
+        const grid = document.getElementById('collectionsGrid');
+        if (collections.length === 0) {
+        grid.innerHTML = '<div style="text-align: center; padding: 2rem; opacity: 0.7;">Loading collections...</div>';
+        return;
+        }
+        const collectionsHTML = collections.map(renderCollection).join('');
+        grid.innerHTML = collectionsHTML;
+        }
+
+        function updateStats() {
+        if (collections.length === 0) return;
+
+        const totalMinted = collections.reduce((sum, col) => sum + (col.currentMinted || 0), 0);
+        const totalChange = collections.reduce((sum, col) => sum + getChangeForPeriod(col, currentPeriod), 0);
+
+        // Find fastest growing collection with better error handling
+        let fastestGrowing = collections[0];
+        let maxChange = getChangeForPeriod(fastestGrowing, currentPeriod);
+
+        collections.forEach(col => {
+        const change = getChangeForPeriod(col, currentPeriod);
+        if (change > maxChange) {
+        maxChange = change;
+        fastestGrowing = col;
+        }
+        });
+
+        const averageGrowth = collections.length > 0 ? (totalChange / collections.length).toFixed(1) : 0;
+
+        document.getElementById('totalCollections').textContent = collections.length;
+        document.getElementById('totalMinted').textContent = totalMinted.toLocaleString();
+        document.getElementById('totalMintedChange').textContent = `${formatChange(totalChange)} (${currentPeriod})`;
+        document.getElementById('fastestCollection').textContent = fastestGrowing?.name || '-';
+
+        // Update fastest growing change display
+        const fastestChangeElement = document.getElementById('fastestGrowingChange');
+        if (fastestChangeElement) {
+        fastestChangeElement.textContent = `${formatChange(maxChange)} mints`;
+        fastestChangeElement.className = `stat-change ${getChangeClass(maxChange)}`;
+        }
+
+        document.getElementById('averageGrowth').textContent = averageGrowth;
+        }
+
+        // =============================================================================
+        // 🌐 API FUNCTIONS - FREE NFT DATA FETCHING
+        // =============================================================================
+
+        // Get current block number for historical data calculation
+        async function getCurrentBlockNumber() {
+        try {
+        const rpcUrl = API_CONFIG.PREFERRED_API === 'alchemy' ? API_CONFIG.ALCHEMY_URL : API_CONFIG.POLYGON_RPC;
+
+        const response = await fetch(rpcUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'eth_blockNumber',
+        params: [],
+        id: 1
+        })
+        });
+        const data = await response.json();
+        const blockNumber = parseInt(data.result, 16);
+        console.log(`📦 Current block number: ${blockNumber}`);
+        return blockNumber;
+        } catch (error) {
+        console.error('Error fetching current block:', error);
+        return null;
+        }
+        }
+
+        // Get total supply of an NFT contract
+        async function getTotalSupply(contractAddress) {
+        try {
+        if (API_CONFIG.PREFERRED_API === 'alchemy') {
+        const response = await fetch(`https://polygon-mainnet.g.alchemy.com/nft/v2/${API_CONFIG.ALCHEMY_API_KEY}/getContractMetadata?contractAddress=${contractAddress}`);
+        const data = await response.json();
+        console.log(`📊 Alchemy data for ${contractAddress}:`, data);
+
+        // Parse the total supply properly - it might be a string
+        let totalSupply = 0;
+        if (data.contractMetadata?.totalSupply) {
+        const supplyValue = data.contractMetadata.totalSupply;
+        // Handle both string and number formats
+        if (typeof supplyValue === 'string') {
+        // If it's a hex string, parse it
+        if (supplyValue.startsWith('0x')) {
+        totalSupply = parseInt(supplyValue, 16);
+        } else {
+        totalSupply = parseInt(supplyValue, 10);
+        }
+        } else {
+        totalSupply = supplyValue;
+        }
+        }
+
+        console.log(`✅ Parsed total supply for ${contractAddress}: ${totalSupply}`);
+        return totalSupply;
+        }
+
+        if (API_CONFIG.PREFERRED_API === 'moralis' && API_CONFIG.MORALIS_API_KEY !== 'YOUR_MORALIS_API_KEY_HERE') {
+        const response = await fetch(`https://deep-index.moralis.io/api/v2/nft/${contractAddress}/metadata?chain=polygon`, {
+        headers: { 'X-API-Key': API_CONFIG.MORALIS_API_KEY }
+        });
+        const data = await response.json();
+        return parseInt(data.total_supply) || 0;
+        }
+
+        // Free Polygon RPC fallback - call totalSupply() function
+        const rpcUrl = API_CONFIG.PREFERRED_API === 'alchemy' ? API_CONFIG.ALCHEMY_URL : API_CONFIG.POLYGON_RPC;
+        const response = await fetch(rpcUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'eth_call',
+        params: [{
+        to: contractAddress,
+        data: '0x18160ddd' // totalSupply() function signature
+        }, 'latest'],
+        id: 1
+        })
+        });
+        const data = await response.json();
+        console.log(`📊 RPC data for ${contractAddress}:`, data);
+
+        if (data.result) {
+        const totalSupply = parseInt(data.result, 16);
+        console.log(`✅ RPC parsed total supply for ${contractAddress}: ${totalSupply}`);
+        return totalSupply;
+        }
+        return 0;
+        } catch (error) {
+        console.error('Error fetching total supply:', error);
+        return 0;
+        }
+        }
+
+        // Calculate historical mints by comparing different time periods
+        async function getHistoricalMints(contractAddress, hoursAgo) {
+        try {
+        const rpcUrl = API_CONFIG.PREFERRED_API === 'alchemy' ? API_CONFIG.ALCHEMY_URL : API_CONFIG.POLYGON_RPC;
+
+        const currentBlock = await getCurrentBlockNumber();
+        if (!currentBlock) return 0;
+
+        // Polygon block time ≈ 2 seconds, so blocks per hour ≈ 1800
+        const blocksPerHour = 1800;
+        const targetBlock = Math.max(1, currentBlock - (hoursAgo * blocksPerHour));
+
+        const response = await fetch(rpcUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'eth_call',
+        params: [{
+        to: contractAddress,
+        data: '0x18160ddd' // totalSupply() function signature
+        }, `0x${targetBlock.toString(16)}`],
+        id: 1
+        })
+        });
+        const data = await response.json();
+        console.log(`📈 Historical data for ${contractAddress} (${hoursAgo}h ago):`, data);
+
+        if (data.result) {
+        const historicalSupply = parseInt(data.result, 16);
+        console.log(`✅ Historical supply for ${contractAddress} (${hoursAgo}h ago): ${historicalSupply}`);
+        return historicalSupply;
+        }
+        return 0;
+        } catch (error) {
+        console.error(`Error fetching historical mints for ${hoursAgo}h ago:`, error);
+        return 0;
+        }
+        }
+
+        // Fetch real data for a collection
+        async function fetchCollectionData(collection) {
+        try {
+        console.log(`🔍 Fetching data for ${collection.name}...`);
+
+        const currentMinted = await getTotalSupply(collection.contractAddress);
+        console.log(`📊 Current minted for ${collection.name}: ${currentMinted}`);
+
+        // Get historical data for change calculations
+        const minted24hAgo = await getHistoricalMints(collection.contractAddress, 24);
+        const minted48hAgo = await getHistoricalMints(collection.contractAddress, 48);
+        const minted7dAgo = await getHistoricalMints(collection.contractAddress, 168); // 24*7
+        const minted30dAgo = await getHistoricalMints(collection.contractAddress, 720); // 24*30
+
+        const change24h = Math.max(0, currentMinted - minted24hAgo);
+        const change48h = Math.max(0, currentMinted - minted48hAgo);
+        const change7d = Math.max(0, currentMinted - minted7dAgo);
+        const change30d = Math.max(0, currentMinted - minted30dAgo);
+
+        console.log(`📈 Changes for ${collection.name}:`, {
+        '24h': change24h,
+        '48h': change48h,
+        '7d': change7d,
+        '30d': change30d
+        });
+
+        return {
+        ...collection,
+        currentMinted: currentMinted,
+        change24h: change24h,
+        change48h: change48h,
+        change7d: change7d,
+        change30d: change30d
+        };
+        } catch (error) {
+        console.error(`❌ Error fetching data for ${collection.name}:`, error);
+        // Return collection with zero values as fallback
+        return {
+        ...collection,
+        currentMinted: 0,
+        change24h: 0,
+        change48h: 0,
+        change7d: 0,
+        change30d: 0
+        };
+        }
+        }
+
+        // Load real data for all collections
+        async function loadRealData() {
+        console.log('🔄 Loading real NFT data from your collections...');
+
+        if (myCollections.length === 0) {
+        console.log('⚠️ No collections configured. Please add your collections to the myCollections array.');
+        return;
+        }
+
+        console.log(`📋 Loading ${myCollections.length} collections:`, myCollections.map(c => c.name));
+
+        const promises = myCollections.map(fetchCollectionData);
+        collections = await Promise.all(promises);
+
+        console.log('✅ Real data loaded successfully!', collections);
+        renderCollections();
+        updateStats();
+        }
+
+        function refreshData() {
+        const btn = document.getElementById('refreshBtn');
+        btn.style.transform = 'scale(1.1) rotate(360deg)';
+
+        // Load real data from APIs
+        setTimeout(async () => {
+        await loadRealData();
+        btn.style.transform = 'scale(1)';
+        }, 500);
+        }
+
+        // Event listeners
+        document.querySelectorAll('.time-filter').forEach(filter => {
+        filter.addEventListener('click', (e) => {
+        document.querySelectorAll('.time-filter').forEach(f => f.classList.remove('active'));
+        e.target.classList.add('active');
+        currentPeriod = e.target.dataset.period;
+        renderCollections();
+        updateStats();
+        });
+        });
+
+        document.getElementById('refreshBtn').addEventListener('click', refreshData);
+
+        // Auto refresh every 10 minutes
+        setInterval(loadRealData, 600000);
+
+        // Initialize the dashboard
+        console.log('🚀 NFT Minting Dashboard initialized');
+        console.log(`📊 Configured ${myCollections.length} collections`);
+
+        // Initial render and load real data
+        renderCollections();
+        updateStats();
+
+        // Load real data after a short delay
+        setTimeout(loadRealData, 2000);
+    </script>
+</body>
+</html>
